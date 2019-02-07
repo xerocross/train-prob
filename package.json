@@ -1,0 +1,17 @@
+{
+  "name": "train-prob",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^24.1.0",
+    "typescript": "^3.3.1"
+  }
+}
