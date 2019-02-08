@@ -1,0 +1,30 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "space-before-function-paren": [true, "always"],
+        "only-arrow-functions" : false,
+        "max-line-length" : false,
+        "interface-name" : false,
+        "variable-name" : false,
+        "prefer-for-of" : false,
+        "comma-spacing": [true, { "before": false, "after": true }],
+        "brace-style": true,
+        "space-before-blocks" : true,
+        "comma-dangle": [true, "never"],
+        "array-bracket-spacing": [true, "never", {}],
+        "space-infix-ops": [true, {"int32Hint": false}],
+        "no-console": false,
+        "no-underscore-dangle" : false,
+        "indent": [true, "spaces", 4],
+        "key-spacing": [true, {
+            "beforeColon": true,
+            "afterColon": true,
+            "mode": "strict"
+        }]
+    },
+    "rulesDirectory": []
+}

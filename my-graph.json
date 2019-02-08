@@ -1,0 +1,50 @@
+{
+    "nodes" : ["A", "B", "C", "D", "E"],
+    "edges" : [
+        {
+            "initNode" : "A",
+            "terminalNode" : "B",
+            "weight" : 5
+        },
+        {
+            "initNode" : "B",
+            "terminalNode" : "C",
+            "weight" : 4
+        },
+        {
+            "initNode" : "C",
+            "terminalNode" : "D",
+            "weight" : 8
+        },
+        {
+            "initNode" : "D",
+            "terminalNode" : "C",
+            "weight" : 8
+        },
+        {
+            "initNode" : "D",
+            "terminalNode" : "E",
+            "weight" : 6
+        },
+        {
+            "initNode" : "A",
+            "terminalNode" : "D",
+            "weight" : 5
+        },
+        {
+            "initNode" : "C",
+            "terminalNode" : "E",
+            "weight" : 2
+        },
+        {
+            "initNode" : "E",
+            "terminalNode" : "B",
+            "weight" : 3
+        },
+        {
+            "initNode" : "A",
+            "terminalNode" : "E",
+            "weight" : 7
+        }
+    ]
+}
