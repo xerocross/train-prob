@@ -23,7 +23,9 @@ node
 > let graph = graphBuilder.build("./my-graph.json");
 ```
 
-Now from the ```graph``` object you have access to various methods in the 
+For now, the GraphBuilder.build method is quite fragile.  It will only work at all
+if the JSON file is formatted exactly, exactly correctly.  From the 
+example, now from the ```graph``` object you have access to various methods in the 
 public Digraph interface.  For example:
 
 ```
