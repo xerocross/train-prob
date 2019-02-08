@@ -10,8 +10,8 @@ dependencies.
 For testing purposes, this package includes an example digraph in JSON format 
 located at ```./my-graph.json```.
 
-After installing all required nodes, a standard battery of tests can be run
-by running ```npm test```
+After installing, a standard battery of tests can be run
+by executing ```npm test```.
 
 There is a node moodule GraphBuilder at ```./graph-builder.js``` that you can use 
 at the node command line to build a digraph from a properly formatted json file.
