@@ -86,22 +86,6 @@ var Digraph = /** @class */ (function () {
         var nodeB = this.getNodeByKey(terminalNodeKey);
         return this.edgeMatrix[this.getIndex(nodeA)][this.getIndex(nodeB)];
     };
-    // public computeDistance (route: Route) {
-    //     const nodes = route.nodeArray;
-    //     let sum = 0;
-    //     for (let i = 0; i < nodes.length - 1; i++) {
-    //         const edgeWeight = this.getEdgeWeight(nodes[i].name, nodes[i + 1].name);
-    //         console.log(`${nodes[i].name}, ${nodes[i + 1]}  ${edgeWeight}`);
-    //         if (edgeWeight === undefined) {
-    //             console.log("NO SUCH ROUTE");
-    //             throw new Error("NO SUCH ROUTE");
-    //             break;
-    //         } else {
-    //             sum += this.getEdgeWeight(nodes[i].name, nodes[i + 1].name) ;
-    //         }
-    //     }
-    //     return sum;
-    // }
     Digraph.prototype.buildRoute = function (routeKeys) {
         var nodes = [];
         for (var i = 0; i < routeKeys.length; i++) {

@@ -1,7 +1,11 @@
 # train-prob
 
 So far this is a node project without any nice interface.  You can interact with 
-it directly at the node console.  
+it directly at the node console.  The source files are written in typescript except
+graph-builder.js, which I wrote directly for use at a node console.
+
+Once you have downloaded the source files, run ```npm install``` to pull all the 
+dependencies.
 
 For testing purposes, this package includes an example digraph in JSON format 
 located at ```./my-graph.json```.
