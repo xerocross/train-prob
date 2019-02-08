@@ -64,7 +64,7 @@ Since this was a test of my abilities, I made a decision to write things from sc
 of using any libraries of relevant data structures or algorithms.  I'm well aware that is 
 not the smartest approach for production programming.
 
-There is never a point when I think: "ah, this is project is perfect and done".  But I have 
+There is never a point when I think: "ah, this project is perfect and done".  But I have 
 submitted this GitHub repo to my recruiter for your review.  I don't know when you will look at it, but
 I will probably add more testing over the weekend and do some cleanup.
 
