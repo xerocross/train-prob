@@ -13,7 +13,7 @@ located at ```./my-graph.json```.
 After installing, a standard battery of tests can be run
 by executing ```npm test```.
 
-There is a node moodule GraphBuilder at ```./graph-builder.js``` that you can use 
+There is a node module GraphBuilder at ```./graph-builder.js``` that you can use 
 at the node command line to build a digraph from a properly formatted json file.
 For example
 
