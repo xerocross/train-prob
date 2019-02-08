@@ -123,7 +123,7 @@ little change.
 For the purpose of finding the _shortest_ route from one node to another, I used the 
 classic Floyd's algorithm.  We have not enforced that the graph does not contain 
 negative cycles.  So, if you build a graph with negative cycles, the method for 
-finding the shortest route will fail.  It will go into an infinite loop.
+finding the shortest route will fail because in that case the problem is ill-posed.
 
 We expect "weight" to model a cost or distance or otherwise a positive number (perhaps 0).  
 Assuming that is the case, Floyd's algorithm is the best known method to find 
