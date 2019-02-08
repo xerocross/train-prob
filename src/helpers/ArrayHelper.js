@@ -18,5 +18,5 @@ exports.default = {
             clone[i] = arr[i];
         }
         return clone;
-    }
+    },
 };

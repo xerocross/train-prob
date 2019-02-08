@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-ignore
+var xerocross_fu_1 = __importDefault(require("xerocross.fu"));
 var ArrayHelper_1 = __importDefault(require("../helpers/ArrayHelper"));
 var route_1 = __importDefault(require("./route"));
-//@ts-ignore
-var xerocross_fu_1 = __importDefault(require("xerocross.fu"));
 // A digraph is immutable.  All data must be passed in at construction.
 var Digraph = /** @class */ (function () {
     function Digraph(edges) {
@@ -48,7 +48,7 @@ var Digraph = /** @class */ (function () {
             }
             var nodeIndexA = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeA, function (x, y) { return x.equals(y); });
             var nodeIndexB = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeB, function (x, y) { return x.equals(y); });
-            if (this.edgeMatrix[nodeIndexA] == undefined) {
+            if (this.edgeMatrix[nodeIndexA] === undefined) {
                 this.edgeMatrix[nodeIndexA] = [];
             }
             this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight;
@@ -64,7 +64,7 @@ var Digraph = /** @class */ (function () {
             // if nodeA == nodeB, then routes will contain a route that is just [nodeA]
             // specifications seem to require that we do not count that as a route
             // remove it
-            if (routes[0].nodeArray.length == 1) { //This check is causion.  It should always be true
+            if (routes[0].nodeArray.length === 1) { // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -75,7 +75,7 @@ var Digraph = /** @class */ (function () {
         var nodeB = this.getNodeByKey(terminalNodeKey);
         var routes = this.getRoutesRecursion([new route_1.default([nodeA])], undefined, maxDist).filter(function (x) { return x.nodeArray[x.nodeArray.length - 1].equals(nodeB); });
         if (nodeA.equals(nodeB)) {
-            if (routes[0].nodeArray.length == 1) { //This check is causion.  It should always be true
+            if (routes[0].nodeArray.length === 1) { // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -86,19 +86,22 @@ var Digraph = /** @class */ (function () {
         var nodeB = this.getNodeByKey(terminalNodeKey);
         return this.edgeMatrix[this.getIndex(nodeA)][this.getIndex(nodeB)];
     };
-    Digraph.prototype.computeDistance = function (route) {
-        var nodes = route.nodeArray;
-        var sum = 0;
-        for (var i = 0; i < nodes.length - 1; i++) {
-            if (this.getEdgeWeight(nodes[i].name, nodes[i + 1].name) == undefined) {
-                throw new Error("invalid route");
-            }
-            else {
-                sum += this.getEdgeWeight(nodes[i].name, nodes[i + 1].name);
-            }
-        }
-        return sum;
-    };
+    // public computeDistance (route: Route) {
+    //     const nodes = route.nodeArray;
+    //     let sum = 0;
+    //     for (let i = 0; i < nodes.length - 1; i++) {
+    //         const edgeWeight = this.getEdgeWeight(nodes[i].name, nodes[i + 1].name);
+    //         console.log(`${nodes[i].name}, ${nodes[i + 1]}  ${edgeWeight}`);
+    //         if (edgeWeight === undefined) {
+    //             console.log("NO SUCH ROUTE");
+    //             throw new Error("NO SUCH ROUTE");
+    //             break;
+    //         } else {
+    //             sum += this.getEdgeWeight(nodes[i].name, nodes[i + 1].name) ;
+    //         }
+    //     }
+    //     return sum;
+    // }
     Digraph.prototype.buildRoute = function (routeKeys) {
         var nodes = [];
         for (var i = 0; i < routeKeys.length; i++) {
@@ -111,11 +114,11 @@ var Digraph = /** @class */ (function () {
         var sum = 0;
         for (var i = 0; i < nodeArray.length - 1; i++) {
             var dist = this.getEdgeWeight(nodeArray[i].name, nodeArray[i + 1].name);
-            if (typeof dist == "number") {
+            if (typeof dist === "number") {
                 sum += dist;
             }
             else {
-                return undefined;
+                throw new Error("NO SUCH ROUTE");
             }
         }
         return sum;
@@ -123,7 +126,7 @@ var Digraph = /** @class */ (function () {
     Digraph.prototype.getRoutesBetweenWithStops = function (initNodeKey, terminalNodeKey, exactStops) {
         var routes = this.getRoutesBetween(initNodeKey, terminalNodeKey, exactStops);
         var actualLen = exactStops + 1;
-        return routes.filter(function (x) { return x.nodeArray.length == actualLen; });
+        return routes.filter(function (x) { return x.nodeArray.length === actualLen; });
     };
     Digraph.prototype.getShortestDistance = function (initNodeKey, terminalNodeKey) {
         return this._shortestPathMatrix[this.getIndex(this.getNodeByKey(initNodeKey))][this.getIndex(this.getNodeByKey(terminalNodeKey))];
@@ -137,11 +140,11 @@ var Digraph = /** @class */ (function () {
         var nodeIndex = ArrayHelper_1.default.indexOf(this.simpleNodes, node, function (x, y) { return x.equals(y); });
         var result = [];
         for (var i = 0; i < numNodes; i++) {
-            if (nodeIndex == i) {
+            if (nodeIndex === i) {
                 // do nothing
             }
             else {
-                if (typeof this.edgeMatrix[nodeIndex][i] == "number") {
+                if (typeof this.edgeMatrix[nodeIndex][i] === "number") {
                     result.push(this.simpleNodes[i]);
                 }
             }
@@ -174,7 +177,7 @@ var Digraph = /** @class */ (function () {
         for (var i = 0; i < numNodes; i++) {
             newPathMatrix[i] = new Array();
             for (var j = 0; j < numNodes; j++) {
-                if (i == j) {
+                if (i === j) {
                     newPathMatrix[i][j] = inf;
                 }
                 else {
@@ -203,7 +206,7 @@ var Digraph = /** @class */ (function () {
             }
             var finalNode = route.nodeArray[route.nodeArray.length - 1];
             if (maxDistance) {
-                routeDistance = this.computeDistance(route);
+                routeDistance = this.getRouteDistance(route);
             }
             var adjacentNodes = this.getAdjacentNodes(finalNode.name);
             for (var j = 0; j < adjacentNodes.length; j++) {
@@ -223,7 +226,7 @@ var Digraph = /** @class */ (function () {
         for (var i = 0; i < this.edges.length; i++) {
             inf += this.edges[i].weight;
         }
-        inf + 10;
+        inf += 10;
         return inf;
     };
     return Digraph;

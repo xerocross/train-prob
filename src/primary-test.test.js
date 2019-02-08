@@ -44,7 +44,9 @@ test("The distance of the route A-E-B-C-D.", function () {
 });
 // #5
 test("The distance of the route A-E-D", function () {
-    expect(graph.getRouteDistance(graph.buildRoute(["A", "E", "D"]))).toBe(undefined);
+    expect(function () {
+        graph.getRouteDistance(graph.buildRoute(["A", "E", "D"]));
+    }).toThrow();
 });
 // #6
 test("The number of trips starting at C and ending at C with a maximum of 3 stops.", function () {

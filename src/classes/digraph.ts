@@ -59,7 +59,7 @@ class Digraph {
         this._shortestPathMatrix = this.generatesShortestPathMatrix();
     }
 
-    public getRoutesBetween (initNodeKey: string, terminalNodeKey: string, maxStops: number) {
+    public getRoutesBetween (initNodeKey: string, terminalNodeKey: string, maxStops: number): Route[] {
         const nodeA = this.getNodeByKey(initNodeKey);
         const nodeB = this.getNodeByKey(terminalNodeKey);
         const totalLen = maxStops + 1;
@@ -75,7 +75,7 @@ class Digraph {
         }
         return routes.filter( (x: Route) => x.nodeArray[x.nodeArray.length - 1].equals(nodeB));
     }
-    public getRoutesMaxDistance (initNodeKey: string, terminalNodeKey: string, maxDist: number) {
+    public getRoutesMaxDistance (initNodeKey: string, terminalNodeKey: string, maxDist: number): Route[] {
         const nodeA = this.getNodeByKey(initNodeKey);
         const nodeB = this.getNodeByKey(terminalNodeKey);
         const routes = this.getRoutesRecursion([new Route([nodeA])], undefined, maxDist).filter((x: Route) => x.nodeArray[x.nodeArray.length - 1].equals(nodeB));
@@ -90,19 +90,6 @@ class Digraph {
         const nodeA = this.getNodeByKey(initNodeKey);
         const nodeB = this.getNodeByKey(terminalNodeKey);
         return this.edgeMatrix[this.getIndex(nodeA)][this.getIndex(nodeB)];
-    }
-
-    public computeDistance (route: Route) {
-        const nodes = route.nodeArray;
-        let sum = 0;
-        for (let i = 0; i < nodes.length - 1; i++) {
-            if (this.getEdgeWeight(nodes[i].name, nodes[i + 1].name) === undefined) {
-                throw new Error("invalid route");
-            } else {
-                sum += this.getEdgeWeight(nodes[i].name, nodes[i + 1].name) ;
-            }
-        }
-        return sum;
     }
 
     public buildRoute (routeKeys: string[]) {
@@ -121,7 +108,7 @@ class Digraph {
             if (typeof dist === "number") {
                 sum += dist;
             } else {
-                return undefined;
+                throw new Error("NO SUCH ROUTE");
             }
         }
         return sum;
@@ -218,7 +205,7 @@ class Digraph {
             }
             const finalNode = route.nodeArray[route.nodeArray.length - 1];
             if (maxDistance) {
-                routeDistance = this.computeDistance(route);
+                routeDistance = this.getRouteDistance(route);
             }
 
             const adjacentNodes = this.getAdjacentNodes(finalNode.name);

@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "yarn ts && yarn jest --verbose",
+    "test": "yarn jest --verbose",
     "ts": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Adam Cross",
   "license": "ISC",
   "dependencies": {
     "@types/jest": "^24.0.0",

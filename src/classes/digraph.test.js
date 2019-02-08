@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var digraph_1 = __importDefault(require("./digraph"));
 var edge_1 = __importDefault(require("./edge"));
 var simple_node_1 = __importDefault(require("./simple-node"));
-// some general tests to see if digraph is working as expected.  
+// some general tests to see if digraph is working as expected.
 test("internal distance matrix works on simple input", function () {
     var nodeA = new simple_node_1.default("A");
     var nodeB = new simple_node_1.default("B");
