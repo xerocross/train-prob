@@ -68,6 +68,10 @@ There is never a point when I think: "ah, this project is perfect and done".  Bu
 submitted this GitHub repo to my recruiter for your review.  I don't know when you will look at it, but
 I will probably add more testing over the weekend and do some cleanup.
 
+At current state, it appears functional.  All the tests pass.  To finish this project to my own
+standard, I would have preferred to have at least 3 days.  Day one for writing the bulk of the code.  Day two for writing a _lot_ more unit tests and cleaning up any bugs I discovered that way.  Day three because everything always takes longer than expected.  But I did rush this because I don't want you to pass me 
+over for taking too long.
+
 ## Usage
 
 A Digraph must be constructed with a list of Edge objects.  An Edge object 
