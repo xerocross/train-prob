@@ -1,9 +1,10 @@
 import SimpleNode from "./simple-node";
 declare class Route {
-    nodeArray: SimpleNode[];
-    isTerminal: boolean | undefined;
+    private _nodeArray;
     constructor(nodeArray: SimpleNode[]);
     contains(node: SimpleNode): boolean;
     toString(): string;
+    getNodeArray(): SimpleNode[];
+    length(): number;
 }
 export default Route;

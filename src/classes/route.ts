@@ -1,23 +1,30 @@
+import ArrayHelper from "../helpers/ArrayHelper";
 import SimpleNode from "./simple-node";
-import ArrayHelper from "../helpers/ArrayHelper";;
 class Route {
-    public nodeArray: SimpleNode[];
-    public isTerminal: boolean | undefined;
-    constructor(nodeArray: SimpleNode[]) {
-        this.nodeArray = nodeArray;
+    private _nodeArray: SimpleNode[];
+    constructor (nodeArray: SimpleNode[]) {
+        this._nodeArray = nodeArray;
     }
 
-    contains (node: SimpleNode) {
-        return ArrayHelper.contains(this.nodeArray, node, (x,y)=> x.equals(y) ) ;
+    public contains (node: SimpleNode) {
+        return ArrayHelper.contains(this._nodeArray, node, (x, y) => x.equals(y) ) ;
     }
-    toString () {
+    public toString () {
         let str = "[";
         let i;
-        for (i = 0; i < this.nodeArray.length - 1; i++) {
-            str+= this.nodeArray[i].toString() + ", ";
+        for (i = 0; i < this._nodeArray.length - 1; i++) {
+            str += this._nodeArray[i].toString() + ", ";
         }
-        str+= this.nodeArray[i].toString() + "]";
+        str += this._nodeArray[i].toString() + "]";
         return str;
+    }
+    public getNodeArray (): SimpleNode[] {
+        // you may have a copy of the array of nodes, but you may not directly
+        // access the internal data
+        return ArrayHelper.shallowClone(this._nodeArray);
+    }
+    public length () {
+        return this._nodeArray.length;
     }
 }
 export default Route;

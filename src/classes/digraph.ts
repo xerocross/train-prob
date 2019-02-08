@@ -25,11 +25,11 @@ class Digraph {
             const nodeB = edge.nodeB;
             if (!ArrayHelper.contains(this.simpleNodes, nodeA, (x: SimpleNode, y: SimpleNode) => x.equals(y) )) {
                 this.simpleNodes.push(nodeA);
-                this.nodeIndex[nodeA.name] = nodeA;
+                this.nodeIndex[nodeA.getName()] = nodeA;
             }
             if (!ArrayHelper.contains(this.simpleNodes, nodeB, (x: SimpleNode, y: SimpleNode) => x.equals(y) )) {
                 this.simpleNodes.push(nodeB);
-                this.nodeIndex[nodeB.name] = nodeB;
+                this.nodeIndex[nodeB.getName()] = nodeB;
             }
         }
         // prepare a matrix to contain the weights
@@ -47,7 +47,7 @@ class Digraph {
             if (!ArrayHelper.contains(this.edges, edge, (x: Edge, y: Edge) => x.equals(y))) {
                 this.edges.push(edge);
             } else {
-                throw new Error(`It looks like you tried to build a digraph with two edges between ${edge.nodeA.name} and ${edge.nodeB.name}, possibly having different weights.  This data structure does not support that.`);
+                throw new Error(`It looks like you tried to build a digraph with two edges between ${edge.nodeA.getName()} and ${edge.nodeB.getName()}, possibly having different weights.  This data structure does not support that.`);
             }
             const nodeIndexA = ArrayHelper.indexOf(this.simpleNodes, nodeA,  (x: SimpleNode, y: SimpleNode) => x.equals(y));
             const nodeIndexB = ArrayHelper.indexOf(this.simpleNodes, nodeB,  (x: SimpleNode, y: SimpleNode) => x.equals(y));
@@ -56,6 +56,11 @@ class Digraph {
             }
             this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight;
         }
+        // The following line executes Floyd's algorithm on the digraph.
+        // I decided to do this upon construction, but if a developer wants
+        // faster construction and lazy execution for methods, this line can be
+        // moved into the method for actually getting a shortest path, and
+        // then saved when the computation is done.
         this._shortestPathMatrix = this.generatesShortestPathMatrix();
     }
 
@@ -69,18 +74,18 @@ class Digraph {
             // if nodeA == nodeB, then routes will contain a route that is just [nodeA]
             // specifications seem to require that we do not count that as a route
             // remove it
-            if (routes[0].nodeArray.length === 1) {  // This check is causion.  It should always be true
+            if (routes[0].length() === 1) {  // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
-        return routes.filter( (x: Route) => x.nodeArray[x.nodeArray.length - 1].equals(nodeB));
+        return routes.filter( (x: Route) => x.getNodeArray()[x.length() - 1].equals(nodeB));
     }
     public getRoutesMaxDistance (initNodeKey: string, terminalNodeKey: string, maxDist: number): Route[] {
         const nodeA = this.getNodeByKey(initNodeKey);
         const nodeB = this.getNodeByKey(terminalNodeKey);
-        const routes = this.getRoutesRecursion([new Route([nodeA])], undefined, maxDist).filter((x: Route) => x.nodeArray[x.nodeArray.length - 1].equals(nodeB));
+        const routes = this.getRoutesRecursion([new Route([nodeA])], undefined, maxDist).filter((x: Route) => x.getNodeArray()[x.length() - 1].equals(nodeB));
         if (nodeA.equals(nodeB)) {
-            if (routes[0].nodeArray.length === 1) {  // This check is causion.  It should always be true
+            if (routes[0].length() === 1) {  // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -101,10 +106,10 @@ class Digraph {
     }
 
     public getRouteDistance (route: Route) {
-        const nodeArray = route.nodeArray;
+        const nodeArray = route.getNodeArray();
         let sum = 0;
         for (let i = 0; i < nodeArray.length - 1; i++) {
-            const dist = this.getEdgeWeight(nodeArray[i].name, nodeArray[i + 1].name);
+            const dist = this.getEdgeWeight(nodeArray[i].getName(), nodeArray[i + 1].getName());
             if (typeof dist === "number") {
                 sum += dist;
             } else {
@@ -117,13 +122,16 @@ class Digraph {
     public getRoutesBetweenWithStops (initNodeKey: string, terminalNodeKey: string, exactStops: number) {
         const routes = this.getRoutesBetween(initNodeKey, terminalNodeKey, exactStops);
         const actualLen = exactStops + 1;
-        return routes.filter((x: Route) => x.nodeArray.length === actualLen);
+        return routes.filter((x: Route) => x.length() === actualLen);
     }
 
     public getShortestDistance (initNodeKey: string, terminalNodeKey: string): number {
         return this._shortestPathMatrix[this.getIndex(this.getNodeByKey(initNodeKey))][this.getIndex(this.getNodeByKey(terminalNodeKey))];
     }
 
+    // possibly this should be a private method, but there
+    // may be some reason why a user would want to be able to
+    // directly access nodes
     public getNodeByKey (key: string) {
         return this.nodeIndex[key];
     }
@@ -200,21 +208,22 @@ class Digraph {
             const route = routes[i];
             let routeDistance;
 
-            if (maxLength && route.nodeArray.length >= maxLength) {
+            if (maxLength && route.length() >= maxLength) {
                 continue;
             }
-            const finalNode = route.nodeArray[route.nodeArray.length - 1];
+            const finalNode = route.getNodeArray()[route.length() - 1];
             if (maxDistance) {
                 routeDistance = this.getRouteDistance(route);
             }
 
-            const adjacentNodes = this.getAdjacentNodes(finalNode.name);
+            const adjacentNodes = this.getAdjacentNodes(finalNode.getName());
             for (let j = 0; j < adjacentNodes.length; j++) {
-                if (maxDistance && routeDistance && routeDistance + this.getEdgeWeight(finalNode.name, adjacentNodes[i].name) >= maxDistance) {
+                if (maxDistance && routeDistance && routeDistance + this.getEdgeWeight(finalNode.getName(), adjacentNodes[i].getName()) >= maxDistance) {
                     continue;
                 }
-                const newRoute = new Route(FU.array.clone(route.nodeArray));
-                newRoute.nodeArray.push(adjacentNodes[j]);
+                const nodeArray = route.getNodeArray();
+                nodeArray.push(adjacentNodes[j]);
+                const newRoute = new Route(nodeArray);
                 const newRoutes = this.getRoutesRecursion([newRoute], maxLength, maxDistance);
                 resultRoutes = FU.array.joinTwoArrays(resultRoutes, newRoutes);
             }

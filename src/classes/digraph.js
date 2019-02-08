@@ -21,11 +21,11 @@ var Digraph = /** @class */ (function () {
             var nodeB = edge.nodeB;
             if (!ArrayHelper_1.default.contains(this.simpleNodes, nodeA, function (x, y) { return x.equals(y); })) {
                 this.simpleNodes.push(nodeA);
-                this.nodeIndex[nodeA.name] = nodeA;
+                this.nodeIndex[nodeA.getName()] = nodeA;
             }
             if (!ArrayHelper_1.default.contains(this.simpleNodes, nodeB, function (x, y) { return x.equals(y); })) {
                 this.simpleNodes.push(nodeB);
-                this.nodeIndex[nodeB.name] = nodeB;
+                this.nodeIndex[nodeB.getName()] = nodeB;
             }
         }
         // prepare a matrix to contain the weights
@@ -44,7 +44,7 @@ var Digraph = /** @class */ (function () {
                 this.edges.push(edge);
             }
             else {
-                throw new Error("It looks like you tried to build a digraph with two edges between " + edge.nodeA.name + " and " + edge.nodeB.name + ", possibly having different weights.  This data structure does not support that.");
+                throw new Error("It looks like you tried to build a digraph with two edges between " + edge.nodeA.getName() + " and " + edge.nodeB.getName() + ", possibly having different weights.  This data structure does not support that.");
             }
             var nodeIndexA = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeA, function (x, y) { return x.equals(y); });
             var nodeIndexB = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeB, function (x, y) { return x.equals(y); });
@@ -53,6 +53,11 @@ var Digraph = /** @class */ (function () {
             }
             this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight;
         }
+        // The following line executes Floyd's algorithm on the digraph.
+        // I decided to do this upon construction, but if a developer wants
+        // faster construction and lazy execution for methods, this line can be
+        // moved into the method for actually getting a shortest path, and
+        // then saved when the computation is done.
         this._shortestPathMatrix = this.generatesShortestPathMatrix();
     }
     Digraph.prototype.getRoutesBetween = function (initNodeKey, terminalNodeKey, maxStops) {
@@ -64,18 +69,18 @@ var Digraph = /** @class */ (function () {
             // if nodeA == nodeB, then routes will contain a route that is just [nodeA]
             // specifications seem to require that we do not count that as a route
             // remove it
-            if (routes[0].nodeArray.length === 1) { // This check is causion.  It should always be true
+            if (routes[0].length() === 1) { // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
-        return routes.filter(function (x) { return x.nodeArray[x.nodeArray.length - 1].equals(nodeB); });
+        return routes.filter(function (x) { return x.getNodeArray()[x.length() - 1].equals(nodeB); });
     };
     Digraph.prototype.getRoutesMaxDistance = function (initNodeKey, terminalNodeKey, maxDist) {
         var nodeA = this.getNodeByKey(initNodeKey);
         var nodeB = this.getNodeByKey(terminalNodeKey);
-        var routes = this.getRoutesRecursion([new route_1.default([nodeA])], undefined, maxDist).filter(function (x) { return x.nodeArray[x.nodeArray.length - 1].equals(nodeB); });
+        var routes = this.getRoutesRecursion([new route_1.default([nodeA])], undefined, maxDist).filter(function (x) { return x.getNodeArray()[x.length() - 1].equals(nodeB); });
         if (nodeA.equals(nodeB)) {
-            if (routes[0].nodeArray.length === 1) { // This check is causion.  It should always be true
+            if (routes[0].length() === 1) { // This check is causion.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -94,10 +99,10 @@ var Digraph = /** @class */ (function () {
         return new route_1.default(nodes);
     };
     Digraph.prototype.getRouteDistance = function (route) {
-        var nodeArray = route.nodeArray;
+        var nodeArray = route.getNodeArray();
         var sum = 0;
         for (var i = 0; i < nodeArray.length - 1; i++) {
-            var dist = this.getEdgeWeight(nodeArray[i].name, nodeArray[i + 1].name);
+            var dist = this.getEdgeWeight(nodeArray[i].getName(), nodeArray[i + 1].getName());
             if (typeof dist === "number") {
                 sum += dist;
             }
@@ -110,11 +115,14 @@ var Digraph = /** @class */ (function () {
     Digraph.prototype.getRoutesBetweenWithStops = function (initNodeKey, terminalNodeKey, exactStops) {
         var routes = this.getRoutesBetween(initNodeKey, terminalNodeKey, exactStops);
         var actualLen = exactStops + 1;
-        return routes.filter(function (x) { return x.nodeArray.length === actualLen; });
+        return routes.filter(function (x) { return x.length() === actualLen; });
     };
     Digraph.prototype.getShortestDistance = function (initNodeKey, terminalNodeKey) {
         return this._shortestPathMatrix[this.getIndex(this.getNodeByKey(initNodeKey))][this.getIndex(this.getNodeByKey(terminalNodeKey))];
     };
+    // possibly this should be a private method, but there
+    // may be some reason why a user would want to be able to
+    // directly access nodes
     Digraph.prototype.getNodeByKey = function (key) {
         return this.nodeIndex[key];
     };
@@ -185,20 +193,21 @@ var Digraph = /** @class */ (function () {
         for (var i = 0; i < routes.length; i++) {
             var route = routes[i];
             var routeDistance = void 0;
-            if (maxLength && route.nodeArray.length >= maxLength) {
+            if (maxLength && route.length() >= maxLength) {
                 continue;
             }
-            var finalNode = route.nodeArray[route.nodeArray.length - 1];
+            var finalNode = route.getNodeArray()[route.length() - 1];
             if (maxDistance) {
                 routeDistance = this.getRouteDistance(route);
             }
-            var adjacentNodes = this.getAdjacentNodes(finalNode.name);
+            var adjacentNodes = this.getAdjacentNodes(finalNode.getName());
             for (var j = 0; j < adjacentNodes.length; j++) {
-                if (maxDistance && routeDistance && routeDistance + this.getEdgeWeight(finalNode.name, adjacentNodes[i].name) >= maxDistance) {
+                if (maxDistance && routeDistance && routeDistance + this.getEdgeWeight(finalNode.getName(), adjacentNodes[i].getName()) >= maxDistance) {
                     continue;
                 }
-                var newRoute = new route_1.default(xerocross_fu_1.default.array.clone(route.nodeArray));
-                newRoute.nodeArray.push(adjacentNodes[j]);
+                var nodeArray = route.getNodeArray();
+                nodeArray.push(adjacentNodes[j]);
+                var newRoute = new route_1.default(nodeArray);
                 var newRoutes = this.getRoutesRecursion([newRoute], maxLength, maxDistance);
                 resultRoutes = xerocross_fu_1.default.array.joinTwoArrays(resultRoutes, newRoutes);
             }

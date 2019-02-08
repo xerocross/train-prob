@@ -1,5 +1,9 @@
 # train-prob
 
+! Update: I have improved the code since the last version so that now the 
+SimpleNode, Route, and Digraph objects are immutable.  These objects, once created, 
+are read-only.  The internal data is fully encapsulated.
+
 I built this for a hiring manager.  There is a note specifically to him below.
 
 So far this is a node project without any nice interface.  You can interact with 
@@ -50,6 +54,10 @@ The public interface is as follows:
     getAdjacentNodes(nodeKey: string): SimpleNode[];
 ```
 
+Note that once the Digraph is constructed, all methods that call for computations to be done 
+take input in terms of keystrings for the nodes---not direct references to the nodes.  The is 
+a convenience allowing you to reference a node by just writing, say, "Atlanta" instead of graph.getNodeById("Atlanta");
+
 Some of the behavior is rather strange by my own opinion.  For example, if there is 
 not some explicit path from "A" to "A" then the route ["A","A"] is invalid.  This was done 
 according with constraints I was given.
@@ -80,6 +88,20 @@ Weight can represent anything---literal distance, monetary cost, time duration, 
 Some of the methods have been named to suggest that weight means distance.  That is
 something I may deprecate in the future in favor of a more generic word.
 
+The name with which a SimpleNode is constructed must be a _unique identifier_---a key.  If you 
+declare two SimpleNodes having the same name/key like
+```
+    const nodeA = new SimpleNode("Atlanta");
+    const nodeB = new SimpleNode("Atlanta");
+```
+then nodeA and nodeB are distinct objects in memory, but ``nodeA.equals(nodeB)`` evaluates
+true.  There is not currently any safety mechanism against constructing a Digraph with 
+two nodes having the same name.  The constructor will accept this.  If you do that, 
+the Digraph will recognize the second 
+node with the same name as a duplicate, and all references to nodes are passed around by 
+key.  So for all practical purposes two nodes are identical if they have the same key
+even if you attempt to store two use different nodes in memory with the same key.  
+
 Here is a simple usage example:
 ```
     import Digraph from "./digraph";
@@ -94,11 +116,8 @@ Here is a simple usage example:
     const digraph = new Digraph([path1, path2]);
 ```
 
-
-My intention is for a Digraph to be immutable.  It contains no public methods for 
-mutating the data.  But I have not enforced immutability (yet).  It is possible 
-to gain direct access to internal data and mutate it.  If you do that, the Digraph 
-is corrupted and none of the methods are guaranteed to work anymore.
+The Digraph, once constructed, is immutable.  To add a new path, you must 
+construct a new Digraph.
 
 ## Graph and Route Specifications
 
@@ -132,8 +151,6 @@ the shortest path.  (That is to say: it has the lowest complexity among known al
 
 
 ## To Do
-
-I will make all of the classes here truly immutable by encapsulating the data.
 
 Some of the public interface methods probably need to be renamed.  Naming is one 
 of the hard problems in programming.
