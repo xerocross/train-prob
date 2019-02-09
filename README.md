@@ -1,5 +1,8 @@
 # train-prob
 
+! Update: If you want to see more unit testing, pull the latest changes on
+Monday, Feb 11.  I plan to write a lot more tests over the weekend.  
+
 ! Update: I have improved the code since the last version so that now the 
 SimpleNode, Route, and Digraph objects are immutable.  These objects, once created, 
 are read-only.  The internal data is fully encapsulated.
