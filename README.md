@@ -98,9 +98,12 @@ then nodeA and nodeB are distinct objects in memory, but ``nodeA.equals(nodeB)``
 true.  There is not currently any safety mechanism against constructing a Digraph with 
 two nodes having the same name.  The constructor will accept this.  If you do that, 
 the Digraph will recognize the second 
-node with the same name as a duplicate, and all references to nodes are passed around by 
-key.  So for all practical purposes two nodes are identical if they have the same key
-even if you attempt to store two use different nodes in memory with the same key.  
+node with the same name as a duplicate, and it will simply identify it
+logically with the previous one.    
+So for all practical purposes two nodes are identical if they have the same key
+even if you attempt to store two use different nodes in memory with the same key.
+And if they are in fact distinct in some way (for example if you attach new properties to them)
+ that distinctiveness will be lost.
 
 Here is a simple usage example:
 ```
