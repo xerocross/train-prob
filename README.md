@@ -7,6 +7,12 @@ Monday, Feb 11.  I plan to write a lot more tests over the weekend.
 SimpleNode, Route, and Digraph objects are immutable.  These objects, once created, 
 are read-only.  The internal data is fully encapsulated.
 
+When I first began writing this package, I used the word "path" for what 
+is now known as an edge.  Later I reworded and used "edge" exclusively for the 
+mathematical concept of a straight-line directed connection between two nodes, and 
+I used route for a traversal from one node to another along existing edges.  The word 
+"path" was deprecated.  But you may still see reference to it in the literature.
+
 I built this for a hiring manager.  There is a note specifically to him below.
 
 So far this is a node project without any nice interface.  You can interact with 
