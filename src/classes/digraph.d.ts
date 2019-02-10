@@ -12,6 +12,7 @@ declare class Digraph {
     getRoutesMaxDistance(initNodeKey: string, terminalNodeKey: string, maxDist: number): Route[];
     getEdgeWeight(initNodeKey: string, terminalNodeKey: string): number;
     buildRoute(routeKeys: string[]): Route;
+    getRouteCost(route: Route): number;
     getRouteDistance(route: Route): number;
     getRoutesBetweenWithStops(initNodeKey: string, terminalNodeKey: string, exactStops: number): Route[];
     getShortestDistance(initNodeKey: string, terminalNodeKey: string): number;

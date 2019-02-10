@@ -69,7 +69,7 @@ var Digraph = /** @class */ (function () {
             // if nodeA == nodeB, then routes will contain a route that is just [nodeA]
             // specifications seem to require that we do not count that as a route
             // remove it
-            if (routes[0].length() === 1) { // This check is causion.  It should always be true
+            if (routes[0].length() === 1) { // This check is caution.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -98,7 +98,7 @@ var Digraph = /** @class */ (function () {
         }
         return new route_1.default(nodes);
     };
-    Digraph.prototype.getRouteDistance = function (route) {
+    Digraph.prototype.getRouteCost = function (route) {
         var nodeArray = route.getNodeArray();
         var sum = 0;
         for (var i = 0; i < nodeArray.length - 1; i++) {
@@ -112,6 +112,12 @@ var Digraph = /** @class */ (function () {
         }
         return sum;
     };
+    // this method is deprecated in favor of getRouteWeight, which
+    // does the same thing but without assuming weight represents a 
+    // distance
+    Digraph.prototype.getRouteDistance = function (route) {
+        return this.getRouteCost(route);
+    };
     Digraph.prototype.getRoutesBetweenWithStops = function (initNodeKey, terminalNodeKey, exactStops) {
         var routes = this.getRoutesBetween(initNodeKey, terminalNodeKey, exactStops);
         var actualLen = exactStops + 1;
@@ -124,7 +130,12 @@ var Digraph = /** @class */ (function () {
     // may be some reason why a user would want to be able to
     // directly access nodes
     Digraph.prototype.getNodeByKey = function (key) {
-        return this.nodeIndex[key];
+        if (this.nodeIndex[key]) {
+            return this.nodeIndex[key];
+        }
+        else {
+            throw new Error("No such node with key " + key + " exists.");
+        }
     };
     Digraph.prototype.getAdjacentNodes = function (nodeKey) {
         var node = this.getNodeByKey(nodeKey);

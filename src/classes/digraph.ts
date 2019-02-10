@@ -74,7 +74,7 @@ class Digraph {
             // if nodeA == nodeB, then routes will contain a route that is just [nodeA]
             // specifications seem to require that we do not count that as a route
             // remove it
-            if (routes[0].length() === 1) {  // This check is causion.  It should always be true
+            if (routes[0].length() === 1) {  // This check is caution.  It should always be true
                 routes.shift(); // remove
             }
         }
@@ -105,7 +105,7 @@ class Digraph {
         return new Route(nodes);
     }
 
-    public getRouteDistance (route: Route) {
+    public getRouteCost(route: Route) {
         const nodeArray = route.getNodeArray();
         let sum = 0;
         for (let i = 0; i < nodeArray.length - 1; i++) {
@@ -118,6 +118,16 @@ class Digraph {
         }
         return sum;
     }
+
+    // this method is deprecated in favor of getRouteWeight, which
+    // does the same thing but without assuming weight represents a 
+    // distance
+    public getRouteDistance (route: Route) {
+        return this.getRouteCost(route);
+    }
+
+
+
 
     public getRoutesBetweenWithStops (initNodeKey: string, terminalNodeKey: string, exactStops: number) {
         const routes = this.getRoutesBetween(initNodeKey, terminalNodeKey, exactStops);
@@ -133,7 +143,11 @@ class Digraph {
     // may be some reason why a user would want to be able to
     // directly access nodes
     public getNodeByKey (key: string) {
-        return this.nodeIndex[key];
+        if (this.nodeIndex[key]) {
+            return this.nodeIndex[key];
+        } else {
+            throw new Error(`No such node with key ${key} exists.`);
+        }
     }
 
     public getAdjacentNodes (nodeKey: string): SimpleNode[] {
