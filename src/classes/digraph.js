@@ -17,8 +17,8 @@ var Digraph = /** @class */ (function () {
         // collect all of the distinct nodes into an array
         for (var i = 0; i < edges.length; i++) {
             var edge = edges[i];
-            var nodeA = edge.nodeA;
-            var nodeB = edge.nodeB;
+            var nodeA = edge.getNodeA();
+            var nodeB = edge.getNodeB();
             if (!ArrayHelper_1.default.contains(this.simpleNodes, nodeA, function (x, y) { return x.equals(y); })) {
                 this.simpleNodes.push(nodeA);
                 this.nodeIndex[nodeA.getName()] = nodeA;
@@ -38,20 +38,20 @@ var Digraph = /** @class */ (function () {
         }
         for (var i = 0; i < edges.length; i++) {
             var edge = edges[i];
-            var nodeA = edge.nodeA;
-            var nodeB = edge.nodeB;
+            var nodeA = edge.getNodeA();
+            var nodeB = edge.getNodeB();
             if (!ArrayHelper_1.default.contains(this.edges, edge, function (x, y) { return x.equals(y); })) {
                 this.edges.push(edge);
             }
             else {
-                throw new Error("It looks like you tried to build a digraph with two edges between " + edge.nodeA.getName() + " and " + edge.nodeB.getName() + ", possibly having different weights.  This data structure does not support that.");
+                throw new Error("It looks like you tried to build a digraph with two edges between " + edge.getNodeA().getName() + " and " + edge.getNodeB().getName() + ", possibly having different weights.  This data structure does not support that.");
             }
             var nodeIndexA = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeA, function (x, y) { return x.equals(y); });
             var nodeIndexB = ArrayHelper_1.default.indexOf(this.simpleNodes, nodeB, function (x, y) { return x.equals(y); });
             if (this.edgeMatrix[nodeIndexA] === undefined) {
                 this.edgeMatrix[nodeIndexA] = [];
             }
-            this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight;
+            this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight();
         }
         // The following line executes Floyd's algorithm on the digraph.
         // I decided to do this upon construction, but if a developer wants
@@ -217,7 +217,7 @@ var Digraph = /** @class */ (function () {
     Digraph.prototype.computeInfinity = function () {
         var inf = 0;
         for (var i = 0; i < this.edges.length; i++) {
-            inf += this.edges[i].weight;
+            inf += this.edges[i].weight();
         }
         inf += 10;
         return inf;

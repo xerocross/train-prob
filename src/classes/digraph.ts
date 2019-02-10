@@ -21,8 +21,8 @@ class Digraph {
         // collect all of the distinct nodes into an array
         for (let i = 0; i < edges.length; i++) {
             const edge = edges[i];
-            const nodeA = edge.nodeA;
-            const nodeB = edge.nodeB;
+            const nodeA = edge.getNodeA();
+            const nodeB = edge.getNodeB();
             if (!ArrayHelper.contains(this.simpleNodes, nodeA, (x: SimpleNode, y: SimpleNode) => x.equals(y) )) {
                 this.simpleNodes.push(nodeA);
                 this.nodeIndex[nodeA.getName()] = nodeA;
@@ -42,19 +42,19 @@ class Digraph {
         }
         for (let i = 0; i < edges.length; i++) {
             const edge = edges[i];
-            const nodeA = edge.nodeA;
-            const nodeB = edge.nodeB;
+            const nodeA = edge.getNodeA();
+            const nodeB = edge.getNodeB();
             if (!ArrayHelper.contains(this.edges, edge, (x: Edge, y: Edge) => x.equals(y))) {
                 this.edges.push(edge);
             } else {
-                throw new Error(`It looks like you tried to build a digraph with two edges between ${edge.nodeA.getName()} and ${edge.nodeB.getName()}, possibly having different weights.  This data structure does not support that.`);
+                throw new Error(`It looks like you tried to build a digraph with two edges between ${edge.getNodeA().getName()} and ${edge.getNodeB().getName()}, possibly having different weights.  This data structure does not support that.`);
             }
             const nodeIndexA = ArrayHelper.indexOf(this.simpleNodes, nodeA,  (x: SimpleNode, y: SimpleNode) => x.equals(y));
             const nodeIndexB = ArrayHelper.indexOf(this.simpleNodes, nodeB,  (x: SimpleNode, y: SimpleNode) => x.equals(y));
             if (this.edgeMatrix[nodeIndexA] === undefined) {
                 this.edgeMatrix[nodeIndexA] = [];
             }
-            this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight;
+            this.edgeMatrix[nodeIndexA][nodeIndexB] = edge.weight();
         }
         // The following line executes Floyd's algorithm on the digraph.
         // I decided to do this upon construction, but if a developer wants
@@ -234,7 +234,7 @@ class Digraph {
     private computeInfinity () {
         let inf = 0;
         for (let i = 0; i < this.edges.length; i++) {
-            inf += this.edges[i].weight;
+            inf += this.edges[i].weight();
         }
         inf += 10;
         return inf;

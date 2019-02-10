@@ -8,15 +8,24 @@ var Edge = /** @class */ (function () {
         if (nodeA.equals(nodeB)) {
             throw new Error("You tried to make a path with the same node at both beginning and end.\n            This data structure does not allow that.");
         }
-        this.nodeA = nodeA;
-        this.nodeB = nodeB;
-        this.weight = weight;
+        this._nodeA = nodeA;
+        this._nodeB = nodeB;
+        this._weight = weight;
     }
+    Edge.prototype.getNodeA = function () {
+        return this._nodeA;
+    };
+    Edge.prototype.getNodeB = function () {
+        return this._nodeB;
+    };
+    Edge.prototype.weight = function () {
+        return this._weight;
+    };
     Edge.prototype.equals = function (o) {
-        return (this.nodeA.equals(o.nodeA) && this.nodeB.equals(o.nodeB));
+        return (this._nodeA.equals(o._nodeA) && this._nodeB.equals(o._nodeB));
     };
     Edge.prototype.toString = function () {
-        return "[" + this.nodeA.toString() + ", " + this.nodeB.toString() + ", " + this.weight + "]";
+        return "[" + this._nodeA.toString() + ", " + this._nodeB.toString() + ", " + this._weight + "]";
     };
     return Edge;
 }());
